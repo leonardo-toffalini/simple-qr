@@ -69,65 +69,65 @@ export default function QRCodeGenerator() {
   }
 
   const downloadQRCode = () => {
-    if (!qrCode) return
+    if (!qrCode) return;
 
     // Create a canvas to combine the elements
-    const canvas = document.createElement("canvas")
-    const ctx = canvas.getContext("2d")
-    const qrImage = new Image()
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d")!;
+    const qrImage = new Image();
 
     qrImage.onload = () => {
       // Set canvas size to accommodate QR code with padding
-      const padding = 20
-      const headerHeight = 40
-      canvas.width = qrImage.width + padding * 2
-      canvas.height = qrImage.height + headerHeight + padding * 2
+      const padding = 20;
+      const headerHeight = 40;
+      canvas.width = qrImage.width + padding * 2;
+      canvas.height = qrImage.height + headerHeight + padding * 2;
 
       // Draw blue background with rounded corners
-      ctx.fillStyle = "#2563EB" // Blue color
-      ctx.beginPath()
-      ctx.roundRect(0, 0, canvas.width, canvas.height, 12)
-      ctx.fill()
+      ctx.fillStyle = "#2563EB"; // Blue color
+      ctx.beginPath();
+      ctx.roundRect(0, 0, canvas.width, canvas.height, 12);
+      ctx.fill();
 
       // Draw white background for QR code with rounded corners
-      ctx.fillStyle = "#FFFFFF"
-      ctx.beginPath()
-      ctx.roundRect(padding, headerHeight + padding / 2, qrImage.width, qrImage.height, 8)
-      ctx.fill()
+      ctx.fillStyle = "#FFFFFF";
+      ctx.beginPath();
+      ctx.roundRect(padding, headerHeight + padding / 2, qrImage.width, qrImage.height, 8);
+      ctx.fill();
 
       // Draw QR code
-      ctx.drawImage(qrImage, padding, headerHeight + padding / 2)
+      ctx.drawImage(qrImage, padding, headerHeight + padding / 2);
 
       // Add center image if available
       if (centerImage) {
-        const logoImg = new Image()
+        const logoImg = new Image();
         logoImg.onload = () => {
           // Calculate logo size (about 20% of QR code)
-          const logoSize = qrImage.width * 0.2
-          const logoX = padding + (qrImage.width - logoSize) / 2
-          const logoY = headerHeight + padding / 2 + (qrImage.height - logoSize) / 2
+          const logoSize = qrImage.width * 0.2;
+          const logoX = padding + (qrImage.width - logoSize) / 2;
+          const logoY = headerHeight + padding / 2 + (qrImage.height - logoSize) / 2;
 
           // Draw white background for logo
-          ctx.fillStyle = "#FFFFFF"
-          ctx.beginPath()
-          ctx.arc(logoX + logoSize / 2, logoY + logoSize / 2, logoSize / 2 + 4, 0, Math.PI * 2)
-          ctx.fill()
+          ctx.fillStyle = "#FFFFFF";
+          ctx.beginPath();
+          ctx.arc(logoX + logoSize / 2, logoY + logoSize / 2, logoSize / 2 + 4, 0, Math.PI * 2);
+          ctx.fill();
 
           // Draw logo
-          ctx.save()
-          ctx.beginPath()
-          ctx.arc(logoX + logoSize / 2, logoY + logoSize / 2, logoSize / 2, 0, Math.PI * 2)
-          ctx.closePath()
-          ctx.clip()
-          ctx.drawImage(logoImg, logoX, logoY, logoSize, logoSize)
-          ctx.restore()
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(logoX + logoSize / 2, logoY + logoSize / 2, logoSize / 2, 0, Math.PI * 2);
+          ctx.closePath();
+          ctx.clip();
+          ctx.drawImage(logoImg, logoX, logoY, logoSize, logoSize);
+          ctx.restore();
 
           // Add "SCAN ME" text
-          ctx.fillStyle = "#FFFFFF"
-          ctx.font = "bold 24px Arial"
-          ctx.textAlign = "center"
-          ctx.textBaseline = "middle"
-          ctx.fillText("SCAN ME", canvas.width / 2, headerHeight / 2 + padding / 2)
+          ctx.fillStyle = "#FFFFFF";
+          ctx.font = "bold 24px Arial";
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillText("SCAN ME", canvas.width / 2, headerHeight / 2 + padding / 2);
 
           // Convert to data URL and download
           const dataUrl = canvas.toDataURL("image/png")
@@ -179,17 +179,12 @@ export default function QRCodeGenerator() {
 
               {centerImage && (
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="bg-white p-1 rounded-full">
-                    <div
-                      className="overflow-hidden rounded-full"
-                      style={{ width: "20%", height: "20%", minWidth: "30px", minHeight: "30px" }}
-                    >
-                      <img
-                        src={centerImage || "/placeholder.svg"}
-                        alt="Center Logo"
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
+                  <div className="bg-white p-1 rounded-lg ring-2 ring-black">
+                    <img
+                      src={centerImage || "/placeholder.svg"}
+                      alt="Center Logo"
+                      className="w-36 h-full object-cover"
+                    />
                   </div>
                 </div>
               )}
@@ -260,12 +255,6 @@ export default function QRCodeGenerator() {
                   >
                     <X size={16} />
                   </Button>
-                )}
-
-                {centerImage && (
-                  <div className="w-10 h-10 rounded-full overflow-hidden border">
-                    <img src={centerImage || "/placeholder.svg"} alt="Preview" className="w-full h-full object-cover" />
-                  </div>
                 )}
               </div>
               <p className="text-xs text-muted-foreground mt-1">For best results, use a square image (JPG, PNG)</p>
